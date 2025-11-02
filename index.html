@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="pt-BR"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <title>Play Kids</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"> 
+  <link rel="manifest" href="manifest.json"> 
+  <link rel="icon" href="assets/imagens/icon-512.png" type="image/png"> 
+  <meta name="theme-color" content="#d1004c"> 
+  <style>
+   body {
+  background: linear-gradient(135deg, #DDA0DD, #87CEFA, #DDA0DD);
+}
+    :root {
+      --cor-fundo: #ffe6eb;
+      --cor-principal: #4682B4;
+      --cor-botao: #00CED1;
+      --cor-categoria: #87CEFA;
+      --cor-texto-secundario: #008080;
+      --cor-sucesso: #d1ffd1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0 10px;
+      background-color: var(--cor-fundo);
+      font-family: 'Segoe UI', sans-serif;
+      color: var(--cor-principal);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    header {
+      text-align: center;
+      padding: 20px;
+    }
+
+    #atendente {
+      background-color: var(--cor-botao);
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+
+    .logo {
+      font-family: 'Fredoka', cursive;
+      font-size: 3em;
+      margin: 0;
+    }
+
+    .boas-vindas {
+      font-size: 1.1em;
+      margin-top: 5px;
+      color: var(--cor-texto-secundario);
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 100px;
+    }
+
+    #mensagem-inicio {
+      text-align: center;
+      margin: 30px auto 20px auto;
+      animation: fadeInUp 1s ease;
+      max-width: 90%;
+    }
+
+    #vitrine {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .item {
+      background-color: #fff0f5;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .item button {
+      background-color: var(--cor-botao);
+      border: none;
+      padding: 5px 10px;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9em;
+    }
+
+    #pedido {
+      background-color: #fff0f5;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px auto;
+      width: 100%;
+      text-align: center;
+    }
+
+    #lista-pedido {
+      max-height: 150px;
+      overflow-y: auto;
+      margin: 10px 0;
+    }
+
+    #total {
+      font-weight: bold;
+      color: var(--cor-texto-secundario);
+    }
+
+    #revisar {
+      background-color: var(--cor-botao);
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 1em;
+    }
+
+    #mensagem {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: var(--cor-sucesso);
+      border-radius: 8px;
+      display: none;
+    }
+
+    #finalizar {
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 20px;
+      background-color: #fff0f5;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    #finalizar input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+
+    #finalizar div {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+#finalizar button {
+  flex: 1;
+  padding: 6px 10px;
+  font-size: 0.85em;
+  border-radius: 20px;
+  background-color: var(--cor-categoria);
+  color: white;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+#finalizar button:hover {
+  transform: scale(1.05);
+}
+
+    footer {
+      background-color: #fff0f5;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      left: 0;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    nav {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.categoria {
+  flex: 1;
+  padding: 8px;
+  font-size: 0.9em;
+  border-radius: 6px;
+  background-color: var(--cor-categoria);
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+    #imagem-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    #imagem-modal img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+
+    #imagem-modal span {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2em;
+      color: white;
+      cursor: pointer;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button {
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+  @keyframes pulsoSuave {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.mensagem-categorias {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.4em;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  margin-top: 8px;
+  animation: pulsoSuave 2.5s infinite;
+}
+  </style> 
+ </head> 
+ <body> <!-- Aqui você insere o restante do HTML e JavaScript que já está funcionando --> 
+  <header> <button id="atendente">Falar com o Atendente</button> 
+   <h1 class="logo">🧚‍♀️Play Kids🦸</h1> 
+   <p class="boas-vindas">Bem-vindo à nossa loja , a diversão esta aqui !</p> 
+   <p id="mensagem-categorias" class="mensagem-categorias" style="display: none;">
+  Visualize o produto clicando na imagem
+</p>
+  </header> 
+  <main> 
+   <div id="mensagem-inicio"> 
+    <p style="font-size: 1.1em; color: var(--cor-texto-secundario); font-style: italic;"> 👀Explore nossas categorias e descubra um mundo mágico✨ e divertido. </p> 
+   </div> 
+   <div id="vitrine" class="grid"></div> 
+   <section id="pedido"> 
+    <h2>Seu Pedido</h2> 
+    <div id="lista-pedido"></div> 
+    <p>Total: R$<span id="total">0,00</span></p> <button id="revisar">Revisar Pedido</button> 
+    <div id="mensagem"></div> 
+   </section> 
+   <section id="finalizar"> 
+    <input type="text" placeholder="Nome" id="nome"> 
+    <input type="text" placeholder="Endereço (opcional)" id="endereco"> 
+    <div> <button onclick="finalizar('Pix')">Pagar com Pix</button> <button onclick="finalizar('Cartão (link) ')">Pagar com Cartão</button> <button onclick="cancelar()">Cancelar</button> 
+    </div> 
+   </section> 
+  </main> 
+  <footer> 
+   <nav> <button class="categoria">Início</button> <button class="categoria">Pula Pula</button> <button class="categoria">Cama Elástica</button> <button class="categoria">Brinquedos</button> <button class="categoria">Diversão Completa</button> 
+   </nav> 
+  </footer> 
+  <div id="imagem-modal"> <span onclick="fecharImagem()">✖</span> 
+   <img id="imagem-ampliada" src="" alt="Produto"> 
+  </div> 
+  <script>
+    let total = 0;
+    const lista = document.getElementById("lista-pedido");
+    const totalEl = document.getElementById("total");
+    const msg = document.getElementById("mensagem");
+    const finalizarBox = document.getElementById("finalizar");
+    const vitrine = document.getElementById("vitrine");
+
+    const produtos = {
+  "Pula Pula": [
+    { nome: "Pula Pula 1,5 x 1,5", preco: 18, imagem: "assets/imagens/pula-pulaG.jpg" },
+    { nome: "Pula Pula (Grande)", preco: 16, imagem: "assets/imagens/pula-pulaGM.jpg" },
+    { nome: "Pula Pula (Castelo)", preco: 20, imagem: "assets/imagens/pula-pulaGG.jpg" },
+    { nome: "Piscina de Bolinha", preco: 22, imagem: "assets/imagens/piscina-bolinha.jpg" }
+  ],
+  "Cama Elástica": [
+    { nome: "Cama Elástica", preco: 12, imagem: "assets/imagens/camaelastica.jpg" },
+    { nome: "Cama Elástica (Grande)", preco: 14, imagem: "assets/imagens/camaelasticag.jpg" },
+    { nome: "Cama Elástica P", preco: 13, imagem: "assets/imagens/camaelasticap.jpg" }
+  ],
+  "Brinquedos": [
+    { nome: "Pebolim", preco: 12, imagem: "assets/imagens/pebolim.jpg" },
+    { nome: "Cavalinho", preco: 13, imagem: "assets/imagens/cavalinhored.jpg" },
+    { nome: "Pebolim G", preco: 14, imagem: "assets/imagens/pebolim2.jpg" },
+    { nome: "Cavalinho Yellow", preco: 15, imagem: "assets/imagens/cavalinhoyellow.jpg" }
+  ],
+  "Diversão Completa": [
+    { nome: "Diversão 1", preco: 30, imagem: "assets/imagens/kids1.jpg" },
+    { nome: "Diversão 2", preco: 28, imagem: "assets/imagens/kids2.jpg" },
+    { nome: "Diversão 3", preco: 35, imagem: "assets/imagens/kids3.jpg" },
+    { nome: "Diversão 4", preco: 40, imagem: "assets/imagens/kids4.jpg" }
+  ]
+};
+
+    function adicionar(nome, preco) {
+      const item = document.createElement("p");
+      item.textContent = `${nome} - R$${preco.toFixed(2).replace(".", ",")}`;
+      lista.appendChild(item);
+      total += preco;
+      totalEl.textContent = total.toFixed(2).replace(".", ",");
+    }
+
+    function mostrarMensagem(texto) {
+      msg.textContent = texto;
+      msg.style.display = "block";
+      setTimeout(() => {
+        msg.style.display = "none";
+        msg.textContent = "";
+      }, 4000);
+    }
+
+    function mostrarCategoria(categoria) {
+  const mensagemInicio = document.getElementById("mensagem-inicio");
+  const mensagemCategorias = document.getElementById("mensagem-categorias"); // nova referência
+  const vitrine = document.getElementById("vitrine");
+
+  if (categoria.trim() === "Início") {
+    mensagemInicio.style.display = "block";
+    mensagemCategorias.style.display = "none"; // oculta a mensagem nas categorias
+    vitrine.innerHTML = "";
+    return;
+  } else {
+    mensagemInicio.style.display = "none";
+    mensagemCategorias.style.display = "block"; // mostra a mensagem nas categorias
+  }
+
+  vitrine.innerHTML = "";
+  produtos[categoria].forEach(produto => {
+    const item = document.createElement("div");
+    item.className = "item";
+    item.innerHTML = `
+      <img src="${produto.imagem}" alt="${produto.nome}" onclick="ampliarImagem('${produto.imagem}')">
+      <div style="flex:1;">
+        <strong>${produto.nome}</strong><br>
+        R$${produto.preco.toFixed(2).replace(".", ",")}
+      </div>
+      <button onclick="adicionar('${produto.nome}', ${produto.preco})">Adicionar</button>
+    `;
+    vitrine.appendChild(item);
+  });
+}
+
+    document.querySelectorAll(".categoria").forEach(botao => {
+      botao.addEventListener("click", () => {
+        mostrarCategoria(botao.textContent);
+      });
+    });
+
+    document.getElementById("atendente").addEventListener("click", () => {
+      mostrarMensagem("Um atendente estará com você em instantes 💬");
+      setTimeout(() => {
+  window.location.href = "https://wa.me/5511981877096?text=Gostaria%20de%20realizar%20um%20or%C3%A7amento%20personalizado.";
+}, 5000);
+    });
+
+    document.getElementById("revisar").addEventListener("click", () => {
+      mostrarMensagem("Revise seu pedido e finalize com seu nome abaixo.");
+      finalizarBox.style.display = "block";
+    });
+
+    function finalizar(metodo) {
+      const nome = document.getElementById("nome").value.trim();
+      const endereco = document.getElementById("endereco").value.trim();
+
+      if (!nome) {
+        mostrarMensagem("Por favor, informe seu nome para finalizar o pedido.");
+        return;
+      }
+
+      const itens = Array.from(lista.children).map(item => item.textContent).join("\n");
+      const valorTotal = total.toFixed(2).replace(".", ",");
+
+      let mensagem = `Olá! Gostaria de finalizar meu pedido:\n\n`;
+      mensagem += `👤 Nome: ${nome}\n`;
+      if (endereco) {
+        mensagem += `📍 Endereço: ${endereco}\n`;
+      }
+      mensagem += `💳 Pagamento: ${metodo}\n\n`;
+      mensagem += `🛍️ Itens:\n${itens}\n\n`;
+      mensagem += `💰 Total: R$${valorTotal}`;
+
+      mostrarMensagem(`Forma de pagamento com ${metodo}. Obrigado, ${nome}! 💖`);
+
+      setTimeout(() => {
+        const link = `https://wa.me/5511981877096?text=${encodeURIComponent(mensagem)}`;
+        window.location.href = link;
+      }, 4000);
+    }
+
+    function cancelar() {
+      lista.innerHTML = "";
+      total = 0;
+      totalEl.textContent = "0,00";
+      document.getElementById("nome").value = "";
+      document.getElementById("endereco").value = "";
+      finalizarBox.style.display = "none";
+      const mensagemInicio = document.getElementById("mensagem-inicio");
+      mensagemInicio.style.display = "block";
+      vitrine.innerHTML = "";
+      mostrarMensagem("Pedido cancelado. Você voltou para o início.");
+    }
+
+    function ampliarImagem(src) {
+      const modal = document.getElementById("imagem-modal");
+      const img = document.getElementById("imagem-ampliada");
+      img.src = src;
+      modal.style.display = "flex";
+    }
+
+    function fecharImagem() {
+      document.getElementById("imagem-modal").style.display = "none";
+    }
+
+    window.addEventListener("load", () => {
+  const mensagem = document.querySelector(".mensagem-atendente");
+  if (mensagem) {
+    const texto = "Gostaria de realizar um orçamento personalizado.";
+    const link = "https://wa.me/5511981877096?text=" + encodeURIComponent(texto);
+
+    setTimeout(() => {
+      window.location.href = link;
+    }, 5000);
+  }
+});
+  </script> 
+ </body>
+</html>
