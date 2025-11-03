@@ -430,9 +430,14 @@
     });
 
     document.getElementById("revisar").addEventListener("click", () => {
-      mostrarMensagem("Revise seu pedido e finalize com seu nome abaixo.");
-      finalizarBox.style.display = "block";
-    });
+  mostrarMensagem("Revise seu pedido e finalize com seu nome abaixo.");
+  finalizarBox.style.display = "block";
+
+  // Aguarda o elemento aparecer e rola até ele
+  setTimeout(() => {
+    document.getElementById("nome").scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 300);
+});
 
     function finalizar(metodo) {
       const nome = document.getElementById("nome").value.trim();
