@@ -4,10 +4,10 @@
   <meta charset="UTF-8"> 
   <title>Sorriso Magico</title> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka&amp;display=swap" rel="stylesheet"> 
   <link rel="manifest" href="manifest.json"> 
   <link rel="icon" href="assets/imagens/icon-512.png" type="image/png"> 
-  <meta name="theme-color" content="#d1004c">
+  <meta name="theme-color" content="#d1004c"> 
   <style>
    body {
   background: linear-gradient(135deg, #DDA0DD, #87CEFA, #DDA0DD);
@@ -277,6 +277,15 @@
         transform: translateY(0);
       }
     }
+    
+    @keyframes fade {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.fade {
+  animation: fade 0.4s ease;
+}
 
     button {
       transition: all 0.3s ease;
@@ -299,15 +308,48 @@
   margin-top: 8px;
   animation: pulsoSuave 2.5s infinite;
 }
+#carrinho {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.8em;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.remover-item {
+  margin-left: 10px;
+  padding: 2px 6px;
+  font-size: 0.8em;
+  background-color: transparent;
+  color: #9370db; /* texto roxo */
+  border: 1px solid #9370db; /* borda roxa */
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.remover-item:hover {
+  background-color: #f3e8ff; /* fundo lilás suave no hover */
+}
+
+#contador-carrinho {
+  position: absolute;
+  top: -14px;
+  right: 16px;
+  font-size: 0.7em;
+  color: #9370db;
+  font-weight: bold;
+}
   </style> 
  </head> 
  <body> <!-- Aqui você insere o restante do HTML e JavaScript que já está funcionando --> 
-  <header> <button id="atendente">Falar com o Atendente</button> 
-   <h1 class="logo" style="font-size: 1.5em;">🧚‍♀️Sorriso Mágico🦸</h1>
+  <header> <button id="atendente">Falar com o Atendente</button> <button id="carrinho" title="Ver carrinho"> 🛒<span id="contador-carrinho">0</span> </button> 
+   <h1 class="logo" style="font-size: 1.5em;">🧚‍♀️Sorriso Mágico🦸</h1> 
    <p class="boas-vindas">Levamos a Diversão até Você !</p> 
-   <p id="mensagem-categorias" class="mensagem-categorias" style="display: none;">
-  Visualize o produto clicando na imagem
-</p>
+   <p id="mensagem-categorias" class="mensagem-categorias" style="display: none;"> Visualize o produto clicando na imagem </p> 
   </header> 
   <main> 
    <div id="mensagem-inicio"> 
@@ -369,21 +411,29 @@
 };
 
     function adicionar(nome, preco) {
-      const item = document.createElement("p");
-      item.textContent = `${nome} - R$${preco.toFixed(2).replace(".", ",")}`;
-      lista.appendChild(item);
-      total += preco;
-      totalEl.textContent = total.toFixed(2).replace(".", ",");
-    }
+  const item = { nome, preco };
 
-    function mostrarMensagem(texto) {
-      msg.textContent = texto;
-      msg.style.display = "block";
-      setTimeout(() => {
-        msg.style.display = "none";
-        msg.textContent = "";
-      }, 4000);
-    }
+  // Atualiza localStorage
+  let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  carrinho.push(item);
+  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+  // Cria item visual com botão de remover
+  const p = document.createElement("p");
+  p.textContent = `${nome} - R$${preco.toFixed(2).replace(".", ",")} `;
+
+  const btnRemover = document.createElement("button");
+btnRemover.className = "remover-item";
+btnRemover.textContent = "🗑️ Remover";
+btnRemover.title = "Apagar este item do carrinho";
+btnRemover.onclick = () => removerItem(item, p);
+p.appendChild(btnRemover);
+  lista.appendChild(p);
+
+  total += preco;
+  totalEl.textContent = total.toFixed(2).replace(".", ",");
+  atualizarContadorCarrinho();
+}
 
     function mostrarCategoria(categoria) {
   const mensagemInicio = document.getElementById("mensagem-inicio");
@@ -439,6 +489,9 @@
   }, 300);
 });
 
+document.getElementById("carrinho").addEventListener("click", () => {
+  document.getElementById("pedido").scrollIntoView({ behavior: "smooth", block: "start" });
+});
     function finalizar(metodo) {
       const nome = document.getElementById("nome").value.trim();
       const endereco = document.getElementById("endereco").value.trim();
@@ -446,6 +499,8 @@
       if (!nome) {
         mostrarMensagem("Por favor, informe seu nome para finalizar o pedido.");
         return;
+        localStorage.removeItem("carrinho");
+        atualizarContadorCarrinho();
       }
 
       const itens = Array.from(lista.children).map(item => item.textContent).join("\n");
@@ -479,7 +534,30 @@
       mensagemInicio.style.display = "block";
       vitrine.innerHTML = "";
       mostrarMensagem("Pedido cancelado. Você voltou para o início.");
-    }
+      localStorage.removeItem("carrinho");
+      atualizarContadorCarrinho();
+   }
+   
+   function removerItem(itemRemovido, elementoHTML) {
+  let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+
+  // Remove o item do array (apenas o primeiro que bater nome e preço)
+  const index = carrinho.findIndex(item => item.nome === itemRemovido.nome && item.preco === itemRemovido.preco);
+  if (index !== -1) {
+    carrinho.splice(index, 1);
+    localStorage.setItem("carrinho", JSON.stringify(carrinho));
+
+    // Remove visualmente
+    lista.removeChild(elementoHTML);
+
+    // Atualiza total
+    total -= itemRemovido.preco;
+    totalEl.textContent = total.toFixed(2).replace(".", ",");
+
+    // Atualiza contador
+    atualizarContadorCarrinho();
+  }
+}
 
     function ampliarImagem(src) {
       const modal = document.getElementById("imagem-modal");
@@ -491,6 +569,30 @@
     function fecharImagem() {
       document.getElementById("imagem-modal").style.display = "none";
     }
+    
+    function atualizarContadorCarrinho() {
+  const carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+  const contador = document.getElementById("contador-carrinho");
+  contador.textContent = carrinho.length;
+
+  // Aplica a animação
+  contador.classList.add("fade");
+
+  // Remove a classe após a animação terminar
+  setTimeout(() => {
+    contador.classList.remove("fade");
+  }, 400);
+}
+
+function mostrarMensagem(texto) {
+  msg.textContent = texto;
+  msg.style.display = "block";
+  msg.classList.add("fade");
+
+  setTimeout(() => {
+    msg.classList.remove("fade");
+  }, 400);
+}
 
     window.addEventListener("load", () => {
   const mensagem = document.querySelector(".mensagem-atendente");
@@ -502,6 +604,26 @@
       window.location.href = link;
     }, 5000);
   }
+
+  const carrinhoSalvo = JSON.parse(localStorage.getItem("carrinho")) || [];
+  carrinhoSalvo.forEach(item => {
+    const p = document.createElement("p");
+    p.textContent = `${item.nome} - R$${item.preco.toFixed(2).replace(".", ",")} `;
+
+    const btnRemover = document.createElement("button");
+    btnRemover.className = "remover-item";
+    btnRemover.textContent = "🗑️ Remover";
+    btnRemover.title = "Apagar este item do carrinho";
+    btnRemover.onclick = () => removerItem(item, p);
+
+    p.appendChild(btnRemover);
+    lista.appendChild(p);
+
+    total += item.preco;
+  });
+
+  totalEl.textContent = total.toFixed(2).replace(".", ",");
+  atualizarContadorCarrinho();
 });
   </script> 
  </body>
